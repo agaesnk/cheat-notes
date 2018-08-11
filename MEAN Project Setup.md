@@ -40,7 +40,7 @@ At the beggining, remember to install all the packages included in the `package.
 
 Now we can start modifiying our default `Express.js` installation. As we won't need any rendering service from the Backend part of our aplication, we can delete the default `views engine setup`:
 
-+ in `app.js`
++ in `server/app.js`
 
 ```javascript
 // view engine setup
@@ -56,7 +56,7 @@ You can delete your `project-folder/server/views` folder, as we won't need any r
 
 As we're creating our own API to manage the connexions with the FrontEnd part of our app, we need to change the way the errors are handleded in the Backend **(status + json response!)**. In order to do this, we can Replace the error handle with the following code: 
 
-+ in `app.js`
++ in `server/app.js`
 
 ```javascript
 // catch 404 and forward to error handler
@@ -89,7 +89,7 @@ We will now install `nodemon` so we won't need to reset the server every time we
 
 To run it, remember to add the following code to be able to run `npm run dev` in the terminal: 
 
-+ in ```package.json```
++ in `server/package.json`
 
   ```"dev": "nodemon  ./bin/www"```
 
@@ -127,11 +127,11 @@ mmm... don't remember WTF problem Thor had during the exercise, but you need to 
 
 
 
-### Connect with the database 
+#### Connect with the database
 
 We are going to create an external file in our `project-folder` so we can keep our code cleaner. Let's create a file in our `project-folder/server` called `database.js.`
 
-+ in `database.js`
++ in `server/database.js`
 
 ```javascript
 const mongoose = require ('mongoose')
@@ -155,7 +155,7 @@ module.exports = mongoose;
 
 Now we can call that file in order to establish the connections:
 
-- in `app.js`: 
+- in `server/app.js`: 
 
 ```javascript 
 const mongoose = require('./database');
@@ -163,7 +163,7 @@ const mongoose = require('./database');
 
 
 
-### Environment variables
+#### Environment variables
 
 We will have two different environments: dev and production. In order to be able to mantain the connexions in both parts of the application (for example, if we deply to Heroku our app, where the routes will change) we need to establish our defined environment for development in our computers. To do that, we will create environment variables.
 
@@ -181,22 +181,19 @@ We will have two different environments: dev and production. In order to be able
 
 
 
-
-
-## Auth
+###Auth
 
 We are about to code in our Express.js app so we can create the **Signup/Login/Logout** functionalities. 
 
 
 
-### Configurate the routes 
+#### Configurate the routes
 
 Let's configurate the routes that our API will use to retrieve information from the database:
 
-+ in `app.js`
++ in `server/app.js`
 
 ```typescript
-
 const authRouter = require('./routes/auth');
 
 ...
@@ -206,10 +203,13 @@ app.use('/api/auth', authRouter);
 
 
 
-+ in `auth.js`:
+#### Configurate the API
+
+We are now about to define the endpoints for our API to work, and the functions we want to be executed for each of them:
+
++ in `routes/auth.js`:
 
 ```typescript
-
 'use strict';
 
 const express = require('express');
@@ -296,18 +296,17 @@ router.post('/logout', (req, res) => {
 module.exports = router;
 ```
 
+**NOTE**: Do not just copy the code, but understand what's happening here!
 
 
 
+#### Create the model
 
-### Create the model
-
-We need to create the model we'll be using in our database:
+We need to create the model we'll be using in our database. In this case, it will be our model for our users to be stored:
 
 + in `models/user.js`:
 
 ```javascript
-
 'use strict';
 
 const mongoose = require("mongoose");
@@ -333,11 +332,9 @@ module.exports = User;
 
 
 
+#### Configurate the session
 
-
-### Configurate the user session
-
-#### Add `express-session`
+##### Add `express-session`
 
 Let's install express-session (session middleware for Express) so we can keep track of the user's sessions: 
 
@@ -345,12 +342,14 @@ Let's install express-session (session middleware for Express) so we can keep tr
 
   `$ npm install --save express-session connect-mongo`
 
-  
+
+
+
+Now we can already define the middleware we'll be using to save the user's session:
 
 + in `server/app.js`
 
  ```javascript
-
 const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
 
@@ -373,9 +372,11 @@ app.use(session({
 
 
 
+
+
 ## Front-End
 
-Let's create the Login, Signup and Logout function for our app, connected to what we did in our Backend server.
+Let's create the Login, Signup and Logout function for our app, connecting with what we did in our Backend-server part.
 
 
 
@@ -383,10 +384,9 @@ Let's create the Login, Signup and Logout function for our app, connected to wha
 
 We need to define the routes that will link the routes we created in our API to our Frontend: 
 
-+ in `app.module.ts`
++ in `app/app.module.ts`
 
 ```typescript
-
 import { RouterModule, Routes } from '@angular/router';
 
 ...
@@ -417,9 +417,9 @@ We are going to create the components: home-page + login-page to be displayed wh
 
   
 
-  Remember that when using the `RouterModule` you need to set the `router-outlet`:
+  Remember that when using the `RouterModule` you need to set the `router-outlet` in the app main template:
 
-+ in `app.component.html`
++ in `app/app.component.html`
 
   ````````````
   
@@ -430,7 +430,7 @@ We are going to create the components: home-page + login-page to be displayed wh
 
 ### Generate the service
 
-We are going to create a service so we can storage our 'connect-with-API' functions in just one place: 
+We are going to create a new service so we can store our 'connect-with-API' functions in just one place. This is a good-practice example, as we will be able to connect as many components to our API through the service as we want (reusing code), instead of having to create a specific connexion for each of them: 
 
 + in the terminal, route  `project-folder/client:`
 
@@ -438,10 +438,9 @@ We are going to create a service so we can storage our 'connect-with-API' functi
 
 
 
-+ in `app.modules`:
++ in `app/app.modules`:
 
 ```javascript
-
 import { HttpClientModule } from '@angular/common/http';
 import { AuthService } from './services/auth.service';
 
@@ -458,12 +457,14 @@ import { AuthService } from './services/auth.service';
 ```
 
 
-#### Configurate the environment: 
+
+### Configurate the environment
+
+Idem that for the server part. Need to differ production/development environments to work in our app:
 
 + in `environment.ts`:
 
 ```typescript
-
 export const environment = {
   production: false,
   API_URL: 'http://localhost:3000/api/auth';
@@ -475,7 +476,6 @@ export const environment = {
 + In `auth.services.ts`:
 
 ```javascript
-
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Subject, Observable } from 'rxjs';
@@ -547,8 +547,6 @@ export class AuthService {
   }
 }
 ```
-
-
 
 
 
@@ -639,11 +637,7 @@ export class AppComponent implements OnInit {
 
 ### Guards
 
-Guards determine if the user is allowed or forbidden to access a certain route.
-
-
-
-Let's generate the guards: 
+Guards determine if the user is allowed or forbidden to access a certain route. Let's generate the guards: 
 
 - in the terminal, route  `project-folder/client`
 
@@ -686,7 +680,6 @@ providers: [...
 + in `init-auth.guard.ts`:
 
 ```typescript
-
 import { Injectable } from '@angular/core';
 import { CanActivate } from '@angular/router';
 
@@ -715,7 +708,6 @@ export class InitAuthGuard implements CanActivate {
 + in `require-user.guards.ts`:
 
 ```typescript
-
 import { Injectable } from '@angular/core';
 import { CanActivate } from '@angular/router';
 import { Router } from '@angular/router';
@@ -753,7 +745,6 @@ export class RequireUserGuard implements CanActivate {
 + in `require-anon.guard.ts`:
 
 ```typescript
-
 import { Injectable } from '@angular/core';
 import { CanActivate } from '@angular/router';
 import { Router } from '@angular/router';
@@ -812,13 +803,13 @@ app.use(cors({
 }));
 ```
 
-Note: If you are using dotenv module with environment variables you could change origin to `process.env.CORS_URL`
+**NOTE**: If you are using dotenv module with environment variables you could change origin to `process.env.CORS_URL`
 
 
 
 ### Login form
 
-We need to create a form so our users can log into the app!
+We need to create a form so our users can log into the app! Be careful, remeber that we have a login-page-component and a login-component, this last one will only include only the form and will have to be required by the login-page-component.
 
 
 
@@ -830,7 +821,7 @@ Let's generate the component:
 
 
 
-+ in `app.module.ts`:
++ in `app/app.module.ts`:
 
 ```typescript
 
@@ -851,20 +842,21 @@ import { FormsModule } from '@angular/forms';
 
 
 
-+ in logincomponent.ts 
++ in `components/login/login.component.ts`:
 
 ```typescript
-
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service'
+
 
 
 @Component({
-  selector: 'app-my-form',
-  templateUrl: './my-form.component.html',
-  styleUrls: ['./my-form.component.css']
+  selector: 'app-login',
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.css']
 })
-export class MyFormComponent implements OnInit {
+export class LoginComponent implements OnInit {
 
 username: string;
 password: string;
@@ -895,7 +887,7 @@ password: string;
 
 
 
-+ in logincomponent.html
+- in `components/login/login.component.html`:
 
 ```typescript
 
