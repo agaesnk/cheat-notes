@@ -1,12 +1,12 @@
-# New MEAN Project
+# $ init : MEAN Project setup
 
 ## Starter code
 
-We are about to create a new project, where we'll be using Express.js for the BackEnd part (storing the API) and Angular.io for the FrontEnd. In order to achieve this, we need to combine 2 different projects to manage both the different parts of the application. 
+We are about to create a new project, where we'll be using **Express.js** for the BackEnd part (storing the API) and **Angular.io** for the FrontEnd. For that, we need to combine two separate projects in our computer to manage the both different parts of the application. 
 
 
 
-In our main project folder, we will create two separated parts: 
+First of all, in our main project folder we will create two new folders: 
 
 - Angular.io project - in the terminal, route  `/project-folder`:
 
@@ -22,13 +22,13 @@ In our main project folder, we will create two separated parts:
 
 ## Backend part
 
-*NOTE: Express would generate the files in ECM5. Change variable declaration to ECM6!
+**NOTE**: Express generates the files in ECM5 nomenclature. Change variable declaration to ECM6!
 
 
 
 ### Set up for the backend
 
-First of all, remember to install all the packages included in the `package.json`
+At the beggining, remember to install all the packages included in the `package.json`
 
 + In terminal, route: `/project-folder/server:`
 
@@ -43,11 +43,12 @@ Now we can start modifiying our default `Express.js` installation. As we won't n
 + in `app.js`
 
 ```javascript
-
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 ```
+
+You can delete your `project-folder/server/views` folder, as we won't need any rendering service from the backend!.
 
 
 
@@ -58,7 +59,6 @@ As we're creating our own API to manage the connexions with the FrontEnd part of
 + in `app.js`
 
 ```javascript
-
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
   res.status(404).json({code: 'not found'});
@@ -105,6 +105,28 @@ We will need to install `mongoose` to manage our conexions with the database:
 
 
 
+####Install `bcrypt`
+
+Let's install bcrypt to keep our user's passwords secure!
+
+- in the terminal, route  `project-folder/server:`
+
+  `$ npm i bcrypt `
+
+
+
+####Uninstall `jade`
+
+mmm... don't remember WTF problem Thor had during the exercise, but you need to uninstall Jade or the world will explode: 
+
+- in the terminal, route  `project-folder/server:`
+
+  `$ npm uninstall jade`
+
+**UPDATE**: The problem is caused due to we deleted the middleware for the view engine before, which is set up for Jade by default during the installation.
+
+
+
 ### Connect with the database 
 
 We are going to create an external file in our `project-folder` so we can keep our code cleaner. Let's create a file in our `project-folder/server` called `database.js.`
@@ -112,19 +134,18 @@ We are going to create an external file in our `project-folder` so we can keep o
 + in `database.js`
 
 ```javascript
-
 const mongoose = require ('mongoose')
 require('dotenv').config();
 mongoose.connect(process.env.MONGODB_URI, {
   keepAlive: true,
   reconnectTries: Number.MAX_VALUE,
-    userNewUrlParser: true
+    useNewUrlParser: true
 })
 .then(()=> {
-    console.log('connected')
+    console.log('CONNECTED TO DATABASE')
 })
 .catch(error => { 
-    console.error(error)})
+    console.error('ERROR CONNECTING TO DATABASE:', error)})
 
 
 module.exports = mongoose;
@@ -137,15 +158,14 @@ Now we can call that file in order to establish the connections:
 - in `app.js`: 
 
 ```javascript 
-
-const mongoose = require ('./database');
+const mongoose = require('./database');
 ```
 
 
 
 ### Environment variables
 
-You have two different environments: dev and production. In order to be able to mantain the connexions in both parts of the application (for example, if we deply to Heroku our app, where the routes will change) we need to establish our defined environment for development in our computers. To do that, we will create environment variables.
+We will have two different environments: dev and production. In order to be able to mantain the connexions in both parts of the application (for example, if we deply to Heroku our app, where the routes will change) we need to establish our defined environment for development in our computers. To do that, we will create environment variables.
 
 + In terminal inside: `project-folder/server`:
 
@@ -153,35 +173,11 @@ You have two different environments: dev and production. In order to be able to 
 
 
 
-+ in ``project-folder/server` - `.env: ` 
++ in `project-folder/server` - `.env: ` 
 
   ```MONGODB_URI = mongodb://localhost:27017/database-name```
 
   
-
-### Install `bcrypt`
-
-Let's install bcrypt to keep our user's passwords secure!
-
-+ in the terminal, route  `project-folder/server:`
-
-  `$ npm i bcrypt `
-
-
-
-### Uninstall `jade`
-
-mmm... don't remember WTF problem Thor had during the exercise, but you need to uninstall Jade or the world will explode: 
-
-+ in the terminal, route  `project-folder/server:`
-
-  `$ npm uninstall jade`
-
-
-
-### Aditional
-
-You can delete your `project-folder/server/views` folder, as we won't need any rendering service from the backend!.
 
 
 
