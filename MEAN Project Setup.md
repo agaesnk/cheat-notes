@@ -467,7 +467,7 @@ Idem that for the server part. Need to differ production/development environment
 ```typescript
 export const environment = {
   production: false,
-  API_URL: 'http://localhost:3000/api/auth';
+  API_URL: 'http://localhost:3000/api/auth'
 };
 ```
 
