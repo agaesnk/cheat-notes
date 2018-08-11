@@ -661,12 +661,16 @@ Let's generate the guards:
 
 ```typescript
 
+import { InitAuthGuard } from './guards/init-auth.guard';
+import { RequireAnonGuard } from './guards/require-anon.guard';
+import { RequireUserGuard } from './guards/require-user.guard';
+
 const routes: Routes = [
 { path: '',  component: HomePageComponent, canActivate: [ InitAuthGuard ] },
 { path: 'login',  component: AuthLoginPageComponent, canActivate: [ RequireAnonGuard ] },
 { path: 'signup',  component: AuthSignupPageComponent, canActivate: [ RequireAnonGuard ] },
 { path: 'page',  component: ... , canActivate: [ RequireUserGuard ] },
-{ path: '**' , redirect to: }
+{ path: '**' , redirectTo: '' }
 ]
 
 ...
