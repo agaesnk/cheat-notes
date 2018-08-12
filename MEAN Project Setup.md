@@ -10,13 +10,13 @@ First of all, in our main project folder we will create two new folders:
 
 - Angular.io project - in the terminal, route  `/project-folder`:
 
-  `$ ng new front-end-name	Ex: 'client'`
+  `$ ng new front-end-name`	Ex: 'client'
 
   
 
 - Express.js project - in the terminal, route  `/project-folder`:
 
-  `$ express --git back-end-name	Ex.: 'server'`
+  `$ express --git back-end-name`	Ex.: 'server'
 
   
 
