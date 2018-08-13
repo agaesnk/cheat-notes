@@ -10,13 +10,13 @@ First of all, in our main project folder we will create two new folders:
 
 - Angular.io project - in the terminal, route  `/project-folder`:
 
-  `$ ng new front-end-name	Ex: 'client'`
+  `$ ng new front-end-name`	Ex: 'client'
 
   
 
 - Express.js project - in the terminal, route  `/project-folder`:
 
-  `$ express --git back-end-name	Ex.: 'server'`
+  `$ express --git back-end-name`	Ex.: 'server'
 
   
 
@@ -467,7 +467,7 @@ Idem that for the server part. Need to differ production/development environment
 ```typescript
 export const environment = {
   production: false,
-  API_URL: 'http://localhost:3000/api/auth';
+  API_URL: 'http://localhost:3000/api/auth'
 };
 ```
 
@@ -656,12 +656,16 @@ import { RequireAnonGuard } from './guards/require-anon.guard';
 import { RequireUserGuard } from './guards/require-user.guard';
 import { InitAuthGuard } from './guards/init-auth.guard';
 
+import { InitAuthGuard } from './guards/init-auth.guard';
+import { RequireAnonGuard } from './guards/require-anon.guard';
+import { RequireUserGuard } from './guards/require-user.guard';
+
 const routes: Routes = [
 { path: '',  component: HomePageComponent, canActivate: [ InitAuthGuard ] },
 { path: 'login',  component: AuthLoginPageComponent, canActivate: [ RequireAnonGuard ] },
 { path: 'signup',  component: AuthSignupPageComponent, canActivate: [ RequireAnonGuard ] },
 { path: 'page',  component: ... , canActivate: [ RequireUserGuard ] },
-{ path: '**' , redirect to: }
+{ path: '**' , redirectTo: '' }
 ]
 
 ...
